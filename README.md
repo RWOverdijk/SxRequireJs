@@ -27,13 +27,9 @@ ZF2RequireJS doesn't work out of the box. It has its own `public` directory and 
 
 2. Copy the js in the public directory to your application's public directory.
 
-Configuration
+Usage, configuration and API docs
 ------------
-To find out how to configure this module, I'd like to forward you to the [configuration docs in the wiki](https://github.com/RWOverdijk/ZF2RequireJS/wiki/Configuration).
-
-Usage
-------------
-To find out how to use this module, I'd like to forward you to the [API docs in the wiki](https://github.com/RWOverdijk/ZF2RequireJS/wiki/API).
+You can find the API docs, configuration options and some usage examples in [the ZF2RequireJS wiki](https://github.com/RWOverdijk/ZF2RequireJS/wiki/API).
 
 TODO
 ------------
