@@ -1,5 +1,6 @@
 SxRequireJs
 =======================
+Version 0.0.2 Created by Wesley Overdijk 
 
 Introduction
 ------------
@@ -27,13 +28,12 @@ SxRequireJs doesn't work out of the box. It has its own `public` directory and t
 
 2. Copy the js in the public directory to your application's public directory.
 
-Usage, configuration and API docs
+Usage and configuration
 ------------
-You can find the API docs, configuration options and some usage examples in [the SxRequireJs wiki](https://github.com/RWOverdijk/SxRequireJs/wiki).
+You can find more information, the configuration options and some usage examples in [the SxRequireJs wiki](https://github.com/RWOverdijk/SxRequireJs/wiki).
 
 TODO
 ------------
-* Add option to supply custom configuration values
 * Add flush option to reset helper
 * Add docs
 * Format generated output (whitespaces)

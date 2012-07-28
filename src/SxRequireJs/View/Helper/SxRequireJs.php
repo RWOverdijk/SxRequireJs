@@ -5,26 +5,57 @@ use Zend\View\Helper\AbstractHelper,
     Zend\View\Model\ViewModel;
 
 /**
- *  
+ * Helper for working with RequireJS
+ *
+ * @package    SxRequireJs
  */
 class SxRequireJs extends AbstractHelper
 {
+    /**
+     * @var array The paths / modules for the config
+     */
     protected $modules      = array();
+
+    /**
+     * @var array The applications to dispatch
+     */
     protected $applications = array();
+
+    /**
+     * @var string The baseUrl of the javascript files
+     */
     protected $baseUrl      = 'js';
+
+    /**
+     * @var array Holds the custom configurations
+     */
     protected $configs      = array();
 
+    /**
+     * This method simply returns self, to allow flexibility.
+     * 
+     * @return SxRequireJs fluent interface
+     */
     public function __invoke()
     {
         return $this;
-        $viewModel = new ViewModel();
     }
 
+    /**
+     * This method renders the needed files
+     * 
+     * @return string the application
+     */
     public function __toString()
     {
         return $this->render();
     }
 
+    /**
+     * Get the rendered output
+     * 
+     * @return string The rendered output
+     */
     public function render()
     {
         return $this->getRequireJs() . $this->inlineScriptTag(array(
@@ -38,22 +69,47 @@ class SxRequireJs extends AbstractHelper
         ));
     }
 
+    /**
+     * This method allows you to set the baseUrl for the requireJs config.
+     * 
+     * @param string $url the new base Url
+     * 
+     * @return SxRequireJs fluent interface
+     */
     public function setBaseUrl($url)
     {
         $this->baseUrl = $url;
+        return $this;
     }
 
+    /**
+     * This method allows you to get the rendered config.
+     * 
+     * @return string the rendered config.
+     */
     public function getConfig()
     {
         return $this->renderConfig();
     }
 
+    /**
+     * This method allows you to get the rendered main code.
+     * 
+     * @return string the rendered main code.
+     */
     public function getMain()
     {
         return $this->renderMain();
     }
 
-    public function addPaths($paths)
+    /**
+     * This method allows you to add paths to the config for your modules.
+     * 
+     * @param array $paths the paths to add
+     * 
+     * @return SxRequireJs fluent interface
+     */
+    public function addPaths(array $paths)
     {
         foreach ($paths as $path) {
             $this->addPath($path);
@@ -62,7 +118,14 @@ class SxRequireJs extends AbstractHelper
         return $this;
     }
 
-    public function addConfiguration($config)
+    /**
+     * This method allows you to add custom configuration
+     * 
+     * @param array $config the custom configuration to add
+     * 
+     * @return SxRequireJs fluent interface
+     */
+    public function addConfiguration(array $config)
     {
         foreach ($config as $key => $value) {
             if (isset($this->configs[$key]) && is_array($this->configs[$key])) {
@@ -79,11 +142,27 @@ class SxRequireJs extends AbstractHelper
         return $this;
     }
 
+    /**
+     * This method allows you to add a path to the config for your modules.
+     * 
+     * @param string $modulename    the modulename to add
+     * @param string $path          The path
+     * 
+     * @return SxRequireJs fluent interface
+     */
     public function addModule($moduleName, $path = null)
     {
         return $this->addPath($moduleName, $path);
     }
 
+    /**
+     * This method allows you to add a path to the config for your modules.
+     * 
+     * @param string $modulename    the modulename to add
+     * @param string $path          The path
+     * 
+     * @return SxRequireJs fluent interface
+     */
     public function addPath($moduleName, $path = null)
     {
         if (null === $path) {
@@ -97,11 +176,24 @@ class SxRequireJs extends AbstractHelper
         return $this;
     }
 
+    /**
+     * This method allows you to get the requireJs script tag, to include require js on your page.
+     * 
+     * @return string the script tag
+     */
     public function getRequireJs()
     {
         return '<script src="'.$this->baseUrl.'/require-jquery.js"></script>';
     }
 
+    /**
+     * This method allows you to add an application that will be dispatched on page load.
+     * 
+     * @param string    $applicationId  The module ID to add
+     * @param integer   $priority       The priority of this application (lower prioty means load later)
+     * 
+     * @return SxRequireJs fluent interface
+     */
     public function addApplication($applicationId, $priority = 1)
     {
         $this->applications[$applicationId] = array (
@@ -112,17 +204,20 @@ class SxRequireJs extends AbstractHelper
         return $this;
     }
 
+    /**
+     * This method renders the config.
+     * 
+     * @return string the rendered config
+     */
     protected function renderConfig()
     {
-        if (empty($this->modules)) {
-            return '';
-        }
-
         $viewModel          = new ViewModel();
         $viewModel->baseUrl = $this->baseUrl;
         $viewModel->setTemplate('sxrequirejs/config.phtml');
 
-        $viewModel->paths = json_encode($this->modules);
+        if (!empty($this->modules)) {
+            $viewModel->paths = json_encode($this->modules);
+        }
 
         if (!empty($this->configs)) {
             $viewModel->configuration = ',' . substr(json_encode($this->configs), 1, -1);
@@ -131,8 +226,18 @@ class SxRequireJs extends AbstractHelper
         return $this->getView()->render($viewModel);
     }
 
+    /**
+     * This method renders the main application code.
+     * 
+     * @return string the application code
+     */
     protected function renderMain()
     {
+        // If we don't have any applications, there's no point in returning a main.
+        if (empty($this->applications)) {
+            return '';
+        }
+
         $this->prioritizeApplications();
 
         $viewModel = new ViewModel();
@@ -141,10 +246,6 @@ class SxRequireJs extends AbstractHelper
         $dependencies   = '';
         $arguments      = array();
         $initializers   = array();
-
-        if (empty($this->applications)) {
-            return '';
-        }
 
         $dependencies   .= '[';
 
@@ -164,7 +265,15 @@ class SxRequireJs extends AbstractHelper
         return $this->getView()->render($viewModel);
     }
 
-    protected function inlineScriptTag($scripts, $attributes = array())
+    /**
+     * This method takes a bunch of scripts, and puts them inside of a script tag.
+     * 
+     * @param array $scripts    The scripts to add inline
+     * @param array $attributes The attributes for the script tag
+     * 
+     * @return string The script tag
+     */
+    protected function inlineScriptTag(array $scripts, array $attributes = array())
     {
         $scriptTag = '<script type="text/javascript"';
 
@@ -186,6 +295,11 @@ class SxRequireJs extends AbstractHelper
         return $scriptTag;
     }
 
+    /**
+     * This method sorts the applications array by priority.
+     * 
+     * @return SxRequireJs fluent interface
+     */
     protected function prioritizeApplications()
     {
         if (empty($this->applications)) {
@@ -212,20 +326,3 @@ class SxRequireJs extends AbstractHelper
         return $this;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
