@@ -276,6 +276,11 @@ class SxRequireJs extends AbstractHelper
      */
     protected function renderConfig()
     {
+        // If we don't have a config, or any modules, there's no point in returning a config.
+        if (empty($this->configs) && empty($this->modules)) {
+            return '';
+        }
+
         $viewModel          = new ViewModel();
         $viewModel->baseUrl = $this->baseUrl;
         $viewModel->setTemplate('sxrequirejs/config.phtml');
