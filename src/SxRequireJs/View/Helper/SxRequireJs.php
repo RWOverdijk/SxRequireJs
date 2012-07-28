@@ -2,7 +2,8 @@
 namespace SxRequireJs\View\Helper;
 
 use Zend\View\Helper\AbstractHelper,
-    Zend\View\Model\ViewModel;
+    Zend\View\Model\ViewModel,
+    Zend\Config\Config;
 
 /**
  * Helper for working with RequireJS
@@ -27,14 +28,19 @@ class SxRequireJs extends AbstractHelper
     protected $baseUrl      = 'js';
 
     /**
-     * @var array Holds the custom configurations
+     * @var Zend\Config\Config Holds the custom configurations
      */
-    protected $configs      = array();
+    protected $configs;
 
     /**
      * @var boolean true when already rendered, false when not.
      */
     protected $rendered     = false;
+
+    public function __construct()
+    {
+        $this->configs = new Config(array(), true);
+    }
 
     /**
      * This method simply returns self, to allow flexibility.
@@ -154,17 +160,8 @@ class SxRequireJs extends AbstractHelper
      */
     public function addConfiguration(array $config)
     {
-        foreach ($config as $key => $value) {
-            if (isset($this->configs[$key]) && is_array($this->configs[$key])) {
-                if (is_array($value)) {
-                    $this->configs[$key] = array_merge($this->configs[$key], $value);
-                } else {
-                    $this->configs[$key][] = $value;
-                }
-            } else {
-                $this->configs[$key] = $value;
-            }
-        }
+        $config = new Config($config);
+        $this->configs->merge($config);
 
         return $this;
     }
@@ -247,7 +244,7 @@ class SxRequireJs extends AbstractHelper
         }
 
         if (!empty($this->configs)) {
-            $viewModel->configuration = ',' . substr(json_encode($this->configs), 1, -1);
+            $viewModel->configuration = ',' . substr(json_encode($this->configs->toArray()), 1, -1);
         }
 
         return $this->getView()->render($viewModel);
