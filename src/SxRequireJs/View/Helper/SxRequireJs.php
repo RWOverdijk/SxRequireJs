@@ -32,9 +32,9 @@ class SxRequireJs extends AbstractHelper
     protected $configs      = array();
 
     /**
-     * @var null|string Holds the rendered string, or null.
+     * @var boolean true when already rendered, false when not.
      */
-    protected $rendered;
+    protected $rendered     = false;
 
     /**
      * This method simply returns self, to allow flexibility.
@@ -63,19 +63,21 @@ class SxRequireJs extends AbstractHelper
      */
     public function render()
     {
-        if (null === $this->rendered) {
-            $this->rendered = $this->getRequireJs() . $this->inlineScriptTag(array(
-                array(
-                    'description'   => 'The application config',
-                    'script'        => $this->getConfig(),
-                ), array(
-                    'description'   => 'The main application (entry point)',
-                    'script'        => $this->getMain(),
-                ),
-            ));
+        if ($this->rendered) {
+            return '';
         }
 
-        return $this->rendered;
+        $this->rendered = true;
+
+        return $this->getRequireJs() . $this->inlineScriptTag(array(
+            array(
+                'description'   => 'The application config',
+                'script'        => $this->getConfig(),
+            ), array(
+                'description'   => 'The main application (entry point)',
+                'script'        => $this->getMain(),
+            ),
+        ));
     }
 
     /**
