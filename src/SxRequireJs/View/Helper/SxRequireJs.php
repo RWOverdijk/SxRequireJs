@@ -23,6 +23,11 @@ class SxRequireJs extends AbstractHelper
     protected $applications = array();
 
     /**
+     * @var string Holds the base path
+     */
+    protected $basePath;
+
+    /**
      * @var string The baseUrl of the javascript files
      */
     protected $baseUrl      = 'js';
@@ -31,6 +36,7 @@ class SxRequireJs extends AbstractHelper
      * @var Zend\Config\Config Holds the custom configurations
      */
     protected $configs;
+
 
     /**
      * @var boolean true when already rendered, false when not.
@@ -98,6 +104,7 @@ class SxRequireJs extends AbstractHelper
         $this->applications = array();
         $this->configs      = array();
         $this->baseUrl      = 'js';
+        $this->basePath     = null;
 
         return $this;
     }
@@ -167,6 +174,20 @@ class SxRequireJs extends AbstractHelper
     }
 
     /**
+     * Get the base path from the viewHelper
+     * 
+     * @return string The basePath
+     */
+    protected function getBasePath()
+    {
+        if (null === $this->basePath) {
+            $this->basePath = $this->getView()->basePath();
+        }
+
+        return $this->basePath;
+    }
+
+    /**
      * This method allows you to add a path to the config for your modules.
      * 
      * @param string $modulename    the modulename to add
@@ -182,7 +203,7 @@ class SxRequireJs extends AbstractHelper
             $path = trim($path, '/');
         }
 
-        $this->modules[$moduleName] = $path;
+        $this->modules[$moduleName] = $this->getBasePath() . '/' . $path;
 
         return $this;
     }
@@ -194,7 +215,7 @@ class SxRequireJs extends AbstractHelper
      */
     public function getRequireJs()
     {
-        return '<script src="'.$this->baseUrl.'/require-jquery.js"></script>';
+        return '<script src="'.$this->getBasePath() . '/' . $this->baseUrl.'/require-jquery.js"></script>';
     }
 
     /**
