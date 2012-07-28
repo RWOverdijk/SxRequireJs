@@ -7,7 +7,7 @@ return array (
     ),
 	'view_helpers' => array (
 		'invokables' => array (
-			'requirejs' => 'Manipulate\View\Helper\SxRequireJs',
+			'requirejs' => 'SxRequireJs\View\Helper\SxRequireJs',
 		)
 	)
 );

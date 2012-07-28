@@ -7,7 +7,7 @@ use Zend\View\Helper\AbstractHelper,
 /**
  *  
  */
-class RequireJs extends AbstractHelper
+class SxRequireJs extends AbstractHelper
 {
 	protected $modules 		= array();
 	protected $applications = array();
