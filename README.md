@@ -34,5 +34,6 @@ You can find more information, the configuration options and some usage examples
 
 TODO
 ------------
-* Format generated output (whitespaces)
+* Format generated output (white spaces)
 * Add module to packagist
+* Add versions support in a intuitive manner
