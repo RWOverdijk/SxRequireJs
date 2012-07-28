@@ -14,7 +14,7 @@ Installation
 
 ```
 cd my/project/dir/vendor
-git clone git://github.com/RWOverdijk/SxRequireJs.git SxRequireJs
+git clone git://github.com/RWOverdijk/SxRequireJs.git
 ```
 2. Enable this module in your `application.config.php`.
 
@@ -29,7 +29,7 @@ SxRequireJs doesn't work out of the box. It has its own `public` directory and t
 
 Usage, configuration and API docs
 ------------
-You can find the API docs, configuration options and some usage examples in [the SxRequireJs wiki](https://github.com/RWOverdijk/SxRequireJs/wiki/API).
+You can find the API docs, configuration options and some usage examples in [the SxRequireJs wiki](https://github.com/RWOverdijk/SxRequireJs/wiki).
 
 TODO
 ------------
