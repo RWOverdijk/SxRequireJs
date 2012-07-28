@@ -1,5 +1,5 @@
 <?php
-namespace RequireJs;
+namespace SxRequireJs;
 
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;

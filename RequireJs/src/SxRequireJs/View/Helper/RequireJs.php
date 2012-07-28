@@ -1,5 +1,5 @@
 <?php
-namespace RequireJs\View\Helper;
+namespace SxRequireJs\View\Helper;
 
 use Zend\View\Helper\AbstractHelper,
 	Zend\View\Model\ViewModel;

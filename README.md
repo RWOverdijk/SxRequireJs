@@ -1,4 +1,4 @@
-ZF2RequireJs
+SxRequireJs
 =======================
 
 Introduction
@@ -14,14 +14,14 @@ Installation
 
 ```
 cd my/project/dir/vendor
-git clone git://github.com/RWOverdijk/ZF2RequireJS.git
+git clone git://github.com/RWOverdijk/SxRequireJs.git SxRequireJs
 ```
 2. Enable this module in your `application.config.php`.
 
 ### Getting it working
-ZF2RequireJS doesn't work out of the box. It has its own `public` directory and therefore the RequireJS file will not be accessible. To get this working, there are a couple of things you can do.
+SxRequireJs doesn't work out of the box. It has its own `public` directory and therefore the RequireJS file will not be accessible. To get this working, there are a couple of things you can do.
 
-1. Add an `AliasMatch` to your vhost (reccomended). Example:
+1. Add an `AliasMatch` to your vhost (recommended). Example:
 ```AliasMatch ^/([a-zA-Z0-9]+)/(css|img|js)/(.*) /Path/To/Your/Application/module/$1/public/$2/$3```  
 *Note: This does require you to add a directory to your vhost to allow access outside of your DocumentRoot.*
 
@@ -29,7 +29,7 @@ ZF2RequireJS doesn't work out of the box. It has its own `public` directory and 
 
 Usage, configuration and API docs
 ------------
-You can find the API docs, configuration options and some usage examples in [the ZF2RequireJS wiki](https://github.com/RWOverdijk/ZF2RequireJS/wiki/API).
+You can find the API docs, configuration options and some usage examples in [the SxRequireJs wiki](https://github.com/RWOverdijk/SxRequireJs/wiki/API).
 
 TODO
 ------------
@@ -37,3 +37,4 @@ TODO
 * Add flush option to reset helper
 * Add docs
 * Format generated output (whitespaces)
+* Add module to packagist
