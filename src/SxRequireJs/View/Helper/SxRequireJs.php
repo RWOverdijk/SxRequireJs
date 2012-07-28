@@ -88,14 +88,14 @@ class SxRequireJs extends AbstractHelper
         $this->rendered = true;
 
         return $this->getRequireJs() . $this->inlineScriptTag(array(
-                    array(
-                        'description' => 'The application config',
-                        'script'      => $this->getConfig(),
-                    ), array(
-                        'description' => 'The main application (entry point)',
-                        'script'      => $this->getMain(),
-                    ),
-                ));
+            array(
+                'description' => 'The application config',
+                'script'      => $this->getConfig(),
+            ), array(
+                'description' => 'The main application (entry point)',
+                'script'      => $this->getMain(),
+            ),
+        ));
     }
 
     /**
@@ -247,7 +247,7 @@ class SxRequireJs extends AbstractHelper
         $src = (null !== $this->requireJsSrc) ?
                 $this->requireJsSrc :
                 $this->getBasePath() . '/' . $this->baseUrl . '/require-jquery.js';
-        
+
         return '<script src="' . $src . '"></script>';
     }
 
