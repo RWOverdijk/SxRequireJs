@@ -70,6 +70,22 @@ class SxRequireJs extends AbstractHelper
     }
 
     /**
+     * This method allows you to clean the helper.
+     *  IMPORTANT: This means you lose all configuration and applications.
+     * 
+     * @return SxRequireJs fluent interface
+     */
+    public function clean()
+    {
+        $this->modules      = array();
+        $this->applications = array();
+        $this->configs      = array();
+        $this->baseUrl      = 'js';
+
+        return $this;
+    }
+
+    /**
      * This method allows you to set the baseUrl for the requireJs config.
      * 
      * @param string $url the new base Url

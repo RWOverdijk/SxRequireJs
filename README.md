@@ -34,7 +34,5 @@ You can find more information, the configuration options and some usage examples
 
 TODO
 ------------
-* Add flush option to reset helper
-* Add docs
 * Format generated output (whitespaces)
 * Add module to packagist
