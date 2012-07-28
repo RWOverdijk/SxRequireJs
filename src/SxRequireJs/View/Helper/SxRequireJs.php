@@ -75,7 +75,7 @@ class SxRequireJs extends AbstractHelper
      * 
      * @return SxRequireJs fluent interface
      */
-    public function clean()
+    public function clear()
     {
         $this->modules      = array();
         $this->applications = array();
