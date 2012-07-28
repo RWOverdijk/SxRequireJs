@@ -267,22 +267,18 @@ class SxRequireJs extends AbstractHelper
         $viewModel = new ViewModel();
         $viewModel->setTemplate('sxrequirejs/main.phtml');
 
-        $dependencies   = '';
         $arguments      = array();
         $initializers   = array();
-
-        $dependencies   .= '[';
+        $dependencies   = array();
 
         foreach ($this->applications as $app) {
-            $dependencies       .= '"'.$app['applicationId'].'",';
+            $dependencies[]     = '"'.$app['applicationId'].'"';
             $strippedId         = str_replace('/', '', $app['applicationId']);
             $arguments[]        = $strippedId;
             $initializers[]     = $strippedId . '();';
         }
 
-        $dependencies = substr($dependencies, 0, -1) . '], ';
-
-        $viewModel->dependencies    = $dependencies;
+        $viewModel->dependencies    = '['.implode(', ', $dependencies).'], ';
         $viewModel->arguments       = implode(', ', $arguments);
         $viewModel->initializers    = implode(PHP_EOL, $initializers) . PHP_EOL;
 
