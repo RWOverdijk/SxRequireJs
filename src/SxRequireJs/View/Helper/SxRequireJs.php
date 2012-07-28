@@ -84,7 +84,7 @@ class SxRequireJs extends AbstractHelper
 
 		$viewModel 			= new ViewModel();
 		$viewModel->baseUrl = $this->baseUrl;
-		$viewModel->setTemplate('requirejs/config.phtml');
+		$viewModel->setTemplate('sxrequirejs/config.phtml');
 
 		$paths = '{';
 		foreach ($this->modules as $moduleName => $path) {
@@ -101,7 +101,7 @@ class SxRequireJs extends AbstractHelper
 		$this->prioritizeApplications();
 
 		$viewModel = new ViewModel();
-		$viewModel->setTemplate('requirejs/main.phtml');
+		$viewModel->setTemplate('sxrequirejs/main.phtml');
 
 		$dependencies 	= '';
 		$arguments 		= array();
