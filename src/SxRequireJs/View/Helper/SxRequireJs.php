@@ -1,4 +1,5 @@
 <?php
+
 namespace SxRequireJs\View\Helper;
 
 use Zend\View\Helper\AbstractHelper,
@@ -12,10 +13,11 @@ use Zend\View\Helper\AbstractHelper,
  */
 class SxRequireJs extends AbstractHelper
 {
+
     /**
      * @var array The paths / modules for the config
      */
-    protected $modules      = array();
+    protected $modules = array();
 
     /**
      * @var array The applications to dispatch
@@ -30,18 +32,22 @@ class SxRequireJs extends AbstractHelper
     /**
      * @var string The baseUrl of the javascript files
      */
-    protected $baseUrl      = 'js';
+    protected $baseUrl = 'js';
+
+    /**
+     * @var string Holds the source file of require js
+     */
+    protected $requireJsSrc;
 
     /**
      * @var Zend\Config\Config Holds the custom configurations
      */
     protected $configs;
 
-
     /**
      * @var boolean true when already rendered, false when not.
      */
-    protected $rendered     = false;
+    protected $rendered = false;
 
     public function __construct()
     {
@@ -82,14 +88,14 @@ class SxRequireJs extends AbstractHelper
         $this->rendered = true;
 
         return $this->getRequireJs() . $this->inlineScriptTag(array(
-            array(
-                'description'   => 'The application config',
-                'script'        => $this->getConfig(),
-            ), array(
-                'description'   => 'The main application (entry point)',
-                'script'        => $this->getMain(),
-            ),
-        ));
+                    array(
+                        'description' => 'The application config',
+                        'script'      => $this->getConfig(),
+                    ), array(
+                        'description' => 'The main application (entry point)',
+                        'script'      => $this->getMain(),
+                    ),
+                ));
     }
 
     /**
@@ -100,11 +106,11 @@ class SxRequireJs extends AbstractHelper
      */
     public function clear()
     {
-        $this->modules      = array();
+        $this->modules = array();
         $this->applications = array();
-        $this->configs      = array();
-        $this->baseUrl      = 'js';
-        $this->basePath     = null;
+        $this->configs = array();
+        $this->baseUrl  = 'js';
+        $this->basePath = null;
 
         return $this;
     }
@@ -209,13 +215,40 @@ class SxRequireJs extends AbstractHelper
     }
 
     /**
+     * Set the source file for requireJs. Requires the full path.
+     *  IMPORTANT:  When setting this and deciding to not use require-jquery,
+     *              please remember to add jquery to the paths if jquery
+     *              is not available in the default path.
+     * 
+     * @param string $src the path to the source file.
+     *
+     * @return SxRequireJs fluent interface
+     */
+    public function setRequireJsSourceFile($src)
+    {
+        if (!is_string($src)) {
+            throw new \Exception\InvalidArgumentException(
+                    'Unexpected argument type received. Expected String got "' . gettype($src) . '"'
+            );
+        }
+
+        $this->requireJsSrc = $src;
+
+        return $this;
+    }
+
+    /**
      * This method allows you to get the requireJs script tag, to include require js on your page.
      * 
      * @return string the script tag
      */
     public function getRequireJs()
     {
-        return '<script src="'.$this->getBasePath() . '/' . $this->baseUrl.'/require-jquery.js"></script>';
+        $src = (null !== $this->requireJsSrc) ?
+                $this->requireJsSrc :
+                $this->getBasePath() . '/' . $this->baseUrl . '/require-jquery.js';
+        
+        return '<script src="' . $src . '"></script>';
     }
 
     /**
@@ -228,7 +261,7 @@ class SxRequireJs extends AbstractHelper
      */
     public function addApplication($applicationId, $priority = 1)
     {
-        $this->applications[$applicationId] = array (
+        $this->applications[$applicationId] = array(
             'applicationId' => $applicationId,
             'priority'      => $priority,
         );
@@ -275,20 +308,20 @@ class SxRequireJs extends AbstractHelper
         $viewModel = new ViewModel();
         $viewModel->setTemplate('sxrequirejs/main.phtml');
 
-        $arguments      = array();
-        $initializers   = array();
-        $dependencies   = array();
+        $arguments = array();
+        $initializers = array();
+        $dependencies = array();
 
         foreach ($this->applications as $app) {
-            $dependencies[]     = '"'.$app['applicationId'].'"';
-            $strippedId         = str_replace('/', '', $app['applicationId']);
-            $arguments[]        = $strippedId;
-            $initializers[]     = $strippedId . '();';
+            $dependencies[] = '"' . $app['applicationId'] . '"';
+            $strippedId     = str_replace('/', '', $app['applicationId']);
+            $arguments[]    = $strippedId;
+            $initializers[] = $strippedId . '();';
         }
 
-        $viewModel->dependencies    = '['.implode(', ', $dependencies).'], ';
-        $viewModel->arguments       = implode(', ', $arguments);
-        $viewModel->initializers    = implode(PHP_EOL, $initializers) . PHP_EOL;
+        $viewModel->dependencies = '[' . implode(', ', $dependencies) . '], ';
+        $viewModel->arguments    = implode(', ', $arguments);
+        $viewModel->initializers = implode(PHP_EOL, $initializers) . PHP_EOL;
 
         return $this->getView()->render($viewModel);
     }
@@ -335,7 +368,7 @@ class SxRequireJs extends AbstractHelper
         }
 
         $sorter = array();
-        $ret    = array();
+        $ret = array();
 
         reset($this->applications);
 
@@ -346,11 +379,12 @@ class SxRequireJs extends AbstractHelper
         asort($sorter);
 
         foreach ($sorter as $k => $v) {
-            $ret[$k]=$this->applications[$k];
+            $ret[$k] = $this->applications[$k];
         }
 
         $this->applications = $ret;
 
         return $this;
     }
+
 }
