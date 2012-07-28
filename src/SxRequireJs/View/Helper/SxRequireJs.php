@@ -2,180 +2,215 @@
 namespace SxRequireJs\View\Helper;
 
 use Zend\View\Helper\AbstractHelper,
-	Zend\View\Model\ViewModel;
+    Zend\View\Model\ViewModel;
 
 /**
  *  
  */
 class SxRequireJs extends AbstractHelper
 {
-	protected $modules 		= array();
-	protected $applications = array();
-	protected $baseUrl 	    = 'js';
+    protected $modules      = array();
+    protected $applications = array();
+    protected $baseUrl      = 'js';
+    protected $configs      = array();
 
-	public function __invoke()
-	{
-		return $this;
-		$viewModel = new ViewModel();
-	}
+    public function __invoke()
+    {
+        return $this;
+        $viewModel = new ViewModel();
+    }
 
-	public function __toString()
-	{
-		return $this->getConfig() . PHP_EOL . $this->getMain();
-	}
+    public function __toString()
+    {
+        return $this->render();
+    }
 
-	public function setBaseUrl($url)
-	{
-		$this->baseUrl = $url;
-	}
+    public function render()
+    {
+        return $this->getRequireJs() . $this->inlineScriptTag(array(
+            array(
+                'description'   => 'The application config',
+                'script'        => $this->getConfig(),
+            ), array(
+                'description'   => 'The main application (entry point)',
+                'script'        => $this->getMain(),
+            ),
+        ));
+    }
 
-	public function getConfig()
-	{
-		return $this->renderConfig();
-	}
+    public function setBaseUrl($url)
+    {
+        $this->baseUrl = $url;
+    }
 
-	public function getMain()
-	{
-		return $this->renderMain();
-	}
+    public function getConfig()
+    {
+        return $this->renderConfig();
+    }
 
-	public function addPaths($paths)
-	{
-		foreach ($paths as $path) {
-			$this->addPath($path);
-		}
+    public function getMain()
+    {
+        return $this->renderMain();
+    }
 
-		return $this;
-	}
+    public function addPaths($paths)
+    {
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
 
-	public function addModule($moduleName, $path = null)
-	{
-		return $this->addPath($moduleName, $path);
-	}
+        return $this;
+    }
 
-	public function addPath($moduleName, $path = null)
-	{
-		if (null === $path) {
-			$path = $moduleName . '/js';
-		} else {
-			$path = trim($path, '/');
-		}
+    public function addConfiguration($config)
+    {
+        foreach ($config as $key => $value) {
+            if (isset($this->configs[$key]) && is_array($this->configs[$key])) {
+                if (is_array($value)) {
+                    $this->configs[$key] = array_merge($this->configs[$key], $value);
+                } else {
+                    $this->configs[$key][] = $value;
+                }
+            } else {
+                $this->configs[$key] = $value;
+            }
+        }
 
-		$this->modules[$moduleName] = $path;
+        return $this;
+    }
 
-		return $this;
-	}
+    public function addModule($moduleName, $path = null)
+    {
+        return $this->addPath($moduleName, $path);
+    }
 
-	public function addApplication($applicationId, $priority = 1)
-	{
-		$this->applications[$applicationId] = array (
-			'applicationId' => $applicationId,
-			'priority'		=> $priority,
-		);
+    public function addPath($moduleName, $path = null)
+    {
+        if (null === $path) {
+            $path = $moduleName . '/js';
+        } else {
+            $path = trim($path, '/');
+        }
 
-		return $this;
-	}
+        $this->modules[$moduleName] = $path;
 
-	protected function renderConfig()
-	{
-		if (empty($this->modules)) {
-			return '';
-		}
+        return $this;
+    }
 
-		$viewModel 			= new ViewModel();
-		$viewModel->baseUrl = $this->baseUrl;
-		$viewModel->setTemplate('sxrequirejs/config.phtml');
+    public function getRequireJs()
+    {
+        return '<script src="'.$this->baseUrl.'/require-jquery.js"></script>';
+    }
 
-		$paths = '{';
-		foreach ($this->modules as $moduleName => $path) {
-			$paths .= PHP_EOL . "$moduleName : '$path',";
-		}
+    public function addApplication($applicationId, $priority = 1)
+    {
+        $this->applications[$applicationId] = array (
+            'applicationId' => $applicationId,
+            'priority'      => $priority,
+        );
 
-		$viewModel->paths = substr($paths, 0, -1) . '}';
+        return $this;
+    }
 
-		return $this->getView()->render($viewModel);
-	}
+    protected function renderConfig()
+    {
+        if (empty($this->modules)) {
+            return '';
+        }
 
-	protected function renderMain()
-	{
-		$this->prioritizeApplications();
+        $viewModel          = new ViewModel();
+        $viewModel->baseUrl = $this->baseUrl;
+        $viewModel->setTemplate('sxrequirejs/config.phtml');
 
-		$viewModel = new ViewModel();
-		$viewModel->setTemplate('sxrequirejs/main.phtml');
+        $viewModel->paths = json_encode($this->modules);
 
-		$dependencies 	= '';
-		$arguments 		= array();
-		$initializers 	= array();
+        if (!empty($this->configs)) {
+            $viewModel->configuration = ',' . substr(json_encode($this->configs), 1, -1);
+        }
 
-		if (empty($this->applications)) {
-			return '';
-		}
+        return $this->getView()->render($viewModel);
+    }
 
-		$dependencies 	.= '[';
+    protected function renderMain()
+    {
+        $this->prioritizeApplications();
 
-		foreach ($this->applications as $app) {
-			$dependencies 		.= '"'.$app['applicationId'].'",';
-			$strippedId 		= str_replace('/', '', $app['applicationId']);
-			$arguments[]  		= $strippedId;
-			$initializers[]	= $strippedId . '();';
-		}
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('sxrequirejs/main.phtml');
 
-		$dependencies = substr($dependencies, 0, -1) . '], ';
+        $dependencies   = '';
+        $arguments      = array();
+        $initializers   = array();
 
-		$viewModel->dependencies 	= $dependencies;
-		$viewModel->arguments 	 	= implode(', ', $arguments);
-		$viewModel->initializers 	= implode(PHP_EOL, $initializers) . PHP_EOL;
+        if (empty($this->applications)) {
+            return '';
+        }
 
-		return $this->getView()->render($viewModel);
-	}
+        $dependencies   .= '[';
 
-	protected function inlineScriptTag($scripts, $attributes = array())
-	{
-		$scriptTag = '<script type="text/javascript"';
+        foreach ($this->applications as $app) {
+            $dependencies       .= '"'.$app['applicationId'].'",';
+            $strippedId         = str_replace('/', '', $app['applicationId']);
+            $arguments[]        = $strippedId;
+            $initializers[]     = $strippedId . '();';
+        }
 
-		if (!empty($attributes)) {
-			foreach ($attributes as $attr => $val) {
-				$scriptTag .= " {$attr}=\"$val\"";
-			}
-		}
+        $dependencies = substr($dependencies, 0, -1) . '], ';
 
-		$scriptTag .= '>' . PHP_EOL;
+        $viewModel->dependencies    = $dependencies;
+        $viewModel->arguments       = implode(', ', $arguments);
+        $viewModel->initializers    = implode(PHP_EOL, $initializers) . PHP_EOL;
 
-		foreach ($scripts as $script) {
-			$scriptTag .= PHP_EOL . '// ' . $script['description'] . PHP_EOL;
-			$scriptTag .= $script['script'] . PHP_EOL;
-		}
+        return $this->getView()->render($viewModel);
+    }
 
-		$scriptTag .= '</script>';
+    protected function inlineScriptTag($scripts, $attributes = array())
+    {
+        $scriptTag = '<script type="text/javascript"';
 
-		return $scriptTag;
-	}
+        if (!empty($attributes)) {
+            foreach ($attributes as $attr => $val) {
+                $scriptTag .= " {$attr}=\"$val\"";
+            }
+        }
 
-	protected function prioritizeApplications()
-	{
-		if (empty($this->applications)) {
-			return $this;
-		}
+        $scriptTag .= '>' . PHP_EOL;
 
-	    $sorter = array();
-	    $ret 	= array();
+        foreach ($scripts as $script) {
+            $scriptTag .= PHP_EOL . '// ' . $script['description'] . PHP_EOL;
+            $scriptTag .= $script['script'] . PHP_EOL;
+        }
 
-	    reset($this->applications);
+        $scriptTag .= '</script>';
 
-	    foreach ($this->applications as $k => $v) {
-	        $sorter[$k] = $v['priority'];
-	    }
+        return $scriptTag;
+    }
 
-	    asort($sorter);
+    protected function prioritizeApplications()
+    {
+        if (empty($this->applications)) {
+            return $this;
+        }
 
-	    foreach ($sorter as $k => $v) {
-	        $ret[$k]=$this->applications[$k];
-	    }
+        $sorter = array();
+        $ret    = array();
 
-	    $this->applications = $ret;
+        reset($this->applications);
 
-	    return $this;
-	}
+        foreach ($this->applications as $k => $v) {
+            $sorter[$k] = $v['priority'];
+        }
+
+        asort($sorter);
+
+        foreach ($sorter as $k => $v) {
+            $ret[$k]=$this->applications[$k];
+        }
+
+        $this->applications = $ret;
+
+        return $this;
+    }
 }
 
 
