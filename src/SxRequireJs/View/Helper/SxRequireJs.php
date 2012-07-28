@@ -174,19 +174,6 @@ class SxRequireJs extends AbstractHelper
      * 
      * @return SxRequireJs fluent interface
      */
-    public function addModule($moduleName, $path = null)
-    {
-        return $this->addPath($moduleName, $path);
-    }
-
-    /**
-     * This method allows you to add a path to the config for your modules.
-     * 
-     * @param string $modulename    the modulename to add
-     * @param string $path          The path
-     * 
-     * @return SxRequireJs fluent interface
-     */
     public function addPath($moduleName, $path = null)
     {
         if (null === $path) {
