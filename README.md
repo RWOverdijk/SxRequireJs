@@ -1,6 +1,6 @@
 SxRequireJs
 =======================
-Version 0.0.2 Created by Wesley Overdijk 
+Version 0.1.0 Created by Wesley Overdijk
 
 Introduction
 ------------
@@ -23,10 +23,14 @@ git clone git://github.com/RWOverdijk/SxRequireJs.git
 SxRequireJs doesn't work out of the box. It has its own `public` directory and therefore the RequireJS file will not be accessible. To get this working, there are a couple of things you can do.
 
 1. Add an `AliasMatch` to your vhost (recommended). Example:
-```AliasMatch ^/([a-zA-Z0-9]+)/(css|img|js)/(.*) /Path/To/Your/Application/module/$1/public/$2/$3```  
+```AliasMatch ^/([a-zA-Z0-9]+)/(css|img|js)/(.*) /Path/To/Your/Application/module/$1/public/$2/$3```
 *Note: This does require you to add a directory to your vhost to allow access outside of your DocumentRoot.*
 
 2. Copy the js in the public directory to your application's public directory.
+
+3. Set up symbolic links to map the module's public dir to the application's public dir
+
+4. Write an .htaccess that allows access to module public directories
 
 Usage and configuration
 ------------
@@ -37,6 +41,5 @@ TODO
 * Format generated output (white spaces)
 * Add module to packagist
 * Add versions support in a intuitive manner
-* Update wiki to reflect new possibilities
-* Update "getting it working" to supply more possibilities (like symlinks)
-* Update wiki and link to requireJs documentation
+* translate support
+* Building translation files from Zend\I18n\Translate
