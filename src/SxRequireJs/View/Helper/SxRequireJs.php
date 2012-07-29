@@ -87,15 +87,19 @@ class SxRequireJs extends AbstractHelper
 
         $this->rendered = true;
 
-        return $this->getRequireJs() . $this->inlineScriptTag(array(
+        $output = $this->getRequireJs();
+
+        $output .= $this->inlineScriptTag(array(
             array(
                 'description' => 'The application config',
                 'script'      => $this->getConfig(),
             ), array(
                 'description' => 'The main application (entry point)',
                 'script'      => $this->getMain(),
-            ),
+            )
         ));
+        
+        return $output; 
     }
 
     /**
@@ -372,22 +376,13 @@ class SxRequireJs extends AbstractHelper
             return $this;
         }
 
-        $sorter = array();
-        $ret = array();
-
-        reset($this->applications);
-
-        foreach ($this->applications as $k => $v) {
-            $sorter[$k] = $v['priority'];
-        }
-
-        asort($sorter);
-
-        foreach ($sorter as $k => $v) {
-            $ret[$k] = $this->applications[$k];
-        }
-
-        $this->applications = $ret;
+        usort($this->applications, function ($a, $b) {
+            if ($a['priority'] === $b['priority']) {
+                return 0;
+            }
+            
+            return ($a['priority'] < $b['priority']) ? -1 : 1;
+        });
 
         return $this;
     }
