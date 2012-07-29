@@ -37,3 +37,6 @@ TODO
 * Format generated output (white spaces)
 * Add module to packagist
 * Add versions support in a intuitive manner
+* Update wiki to reflect new possibilities
+* Update "getting it working" to supply more possibilities (like symlinks)
+* Update wiki and link to requireJs documentation
