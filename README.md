@@ -43,3 +43,4 @@ TODO
 * Add versions support in a intuitive manner
 * translate support
 * Building translation files from Zend\I18n\Translate
+* Build in optimizer support
