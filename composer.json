@@ -1,0 +1,12 @@
+{
+    "name": "wickedymike/sxrequirejs",
+    "type": "library",
+    "autoload": {
+        "psr-0": {
+            "ZfcTwig": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
