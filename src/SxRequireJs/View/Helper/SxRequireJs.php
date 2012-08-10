@@ -79,12 +79,7 @@ class SxRequireJs extends AbstractHelper
      */
     public function __toString()
     {
-        try {
-            return $this->render();
-        } catch (Exception $e) {
-            return '<h5>'.$e->getMessage(). '</h5>';
-        }
-        return '';
+        return $this->render();
     }
 
     /**
