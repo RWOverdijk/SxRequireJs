@@ -199,7 +199,7 @@ class SxRequireJs extends AbstractHelper
     protected function getBasePath()
     {
         if (null === $this->basePath) {
-            $this->basePath = $this->getView()->getRequest()->getBasePath();
+            $this->basePath = parent::getView()->basePath();
         }
 
         return $this->basePath;
