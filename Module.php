@@ -19,6 +19,13 @@ class Module implements AutoloaderProviderInterface
         );
     }
 
+    public function onBootstrap($e)
+    {
+        $viewManager    = $e->getApplication()->getServiceManager()->get('ViewManager');
+        $helperManager  = $viewManager->getHelperManager();
+        $helperManager->get('requirejs')->setViewManager($viewManager);
+    }
+
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
