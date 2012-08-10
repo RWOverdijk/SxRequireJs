@@ -1,5 +1,5 @@
 {
-    "name": "rwoverdijk/sxrequirejs",
+    "name": "wickedymike/sxrequirejs",
     "type": "library",
     "autoload": {
         "psr-0": {
