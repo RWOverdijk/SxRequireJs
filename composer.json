@@ -3,7 +3,9 @@
     "description": "A RequireJS module for Zend Framework 2.",
     "type": "library",
     "keywords": [
-        "requirejs"
+        "requirejs",
+        "zf2",
+        "zend framework 2"
     ],
     "homepage": "https://github.com/RWOverdijk/SxRequireJs",
     "authors": [
