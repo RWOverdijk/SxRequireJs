@@ -9,8 +9,16 @@ It allows you to use RequireJs within ZF2 by setting up modules / paths and addi
 
 Installation
 ------------
+### Composer (recommended)
+The recommended way to get a working copy of this project is to clone the repository and use composer to install dependencies:
+```
+cd my/project/dir
+git clone git://github.com/RWOverdijk/SxRequireJs.git
+cd SxRequireJs
+php composer.phar install
+```
 
-### Main installation
+### Git clone installation
 1. Clone this module into your `vendor` directory. `(usually /path/to/application/vendor)` like this:
 
 ```
