@@ -39,7 +39,6 @@ You can find more information, the configuration options and some usage examples
 TODO
 ------------
 * Format generated output (white spaces)
-* Add module to packagist
 * Add versions support in a intuitive manner
 * translate support
 * Building translation files from Zend\I18n\Translate
