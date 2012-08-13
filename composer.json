@@ -1,0 +1,28 @@
+{
+    "name": "rwoverdijk/sxrequirejs",
+    "description": "A RequireJS module for Zend Framework 2.",
+    "type": "library",
+    "keywords": [
+        "requirejs"
+    ],
+    "homepage": "https://github.com/RWOverdijk/SxRequireJs",
+    "authors": [
+        {
+            "name": "Wesley Overdijk",
+            "email": "r.w.overdijk@gmail.com",
+            "homepage": "http://blog.spoonx.nl/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "SxRequireJs": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
