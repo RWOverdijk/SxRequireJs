@@ -24,7 +24,7 @@ php composer.phar install
 cd my/project/dir/vendor
 git clone git://github.com/RWOverdijk/SxRequireJs.git
 ```
- Enable this module in your `application.config.php`.
+2. Enable this module in your `application.config.php`.
 
 ### Getting it working
 SxRequireJs doesn't work out of the box. It has its own `public` directory and therefore the RequireJS file will not be accessible. To get this working, there are a couple of things you can do.
