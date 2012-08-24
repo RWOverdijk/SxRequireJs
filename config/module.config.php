@@ -9,5 +9,11 @@ return array (
         'invokables' => array (
             'requirejs' => 'SxRequireJs\View\Helper\SxRequireJs',
         )
-    )
+    ),
+
+    'asset_manager' => array(
+        'map' => array(
+            'js/require-jquery.js' => __DIR__ . '/../public/js/require-jquery.js',
+        ),
+    ),
 );
