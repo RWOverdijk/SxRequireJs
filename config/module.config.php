@@ -12,8 +12,10 @@ return array (
     ),
 
     'asset_manager' => array(
-        'map' => array(
-            'js/require-jquery.js' => __DIR__ . '/../public/js/require-jquery.js',
+        'resolver_configs' => array(
+            'map' => array(
+                'js/require-jquery.js' => __DIR__ . '/../public/js/require-jquery.js',
+            ),
         ),
     ),
 );
